@@ -29,8 +29,6 @@ class TileSystem():
     def draw_tilesetat(self, targetsurface, startx, starty):
         targetrect = pygame.Rect( (startx, starty), (self.tiles_image.get_width(), self.tiles_image.get_height()))
         targetsurface.blit(self.tiles_image, targetrect)
-        
-
 
 
 
