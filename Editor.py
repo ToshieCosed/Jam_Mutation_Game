@@ -4,6 +4,7 @@ import pygame.constants
 from Sprite import Sprite
 from Menus import Menus
 from TileMap import TileMap
+from DrawText import Text_Renderer
 import math
 
 import random
@@ -40,14 +41,13 @@ clear_screen.fill([0, 0, 0])
 mouse_graphic = pygame.image.load('Assets/Mouse.png').convert()
 toggle_grid = pygame.image.load('Assets/ToggleGrid_Editor.png').convert()
 
-
 tilesystem = TileSystem()
 
 #off by one would be 32, 24 but it needs one extra for the 0'th slot. -.-
 tilesystem.make_tiles(33, 25, tilesystem.tiles_image)
 tilemap = TileMap(33, 33)
 
-
+textsystem = Text_Renderer(screen)
 
 color = [255, 255, 0]
 s.fill(color)
@@ -81,9 +81,13 @@ while(running):
             if (target_y <32):
                     #Another stupid catch because apparently out of range is somehow possible
                 if (curtilenum <= len(tilesystem.tiles)):
-                    tilemap.changetileat(curtilenum, target_x, target_y)
-
-
+                    if curtilenum !=50 & curtilenum != 49:
+                        tilemap.changetileat(curtilenum, target_x, target_y)
+                    if curtilenum == 50:
+                        tilemap.addenemyat('eye_enemy', target_x, target_y)
+                    if curtilenum == 49:
+                        tilemap.addenemyat('mover_enemy', target_x, target_y)
+                    
         #get editor tiles
         if (target_x >=32):
             if (target_y < 24):
@@ -94,8 +98,6 @@ while(running):
                 if curtilenum > 130:
                     curtilenum = 130
                     #print(curtilenum)
-
-
 
     screen.blit(clear_screen, [0,0])
 
@@ -108,8 +110,17 @@ while(running):
             if (tilemap.gettileat(i, j)) !=None:
                 l = tilemap.gettileat(i, j)
 
-            tilesystem.drawtileat(screen, i, j, l)
+            if l != 49 & l != 50:
 
+                tilesystem.drawtileat(screen, i, j, l)
+
+    for enemy in tilemap.enemies:
+        type_, targ_x, targ_y = enemy
+    
+        if type_ == 'eye_enemy':
+            tilesystem.draw_tilesetat(screen, 50, targ_x, targ_y)
+        if type == 'mover_enemy':
+            tilesystem.draw_tilesetat(screen, 49, targ_x, targ_y)
 
     #draw tileset
     tilesystem.draw_tilesetat(screen, 1024, 0)
@@ -124,6 +135,9 @@ while(running):
     #draw buttons and whatnot
     screen.blit(toggle_grid, (32* 35, 22 * 32))
     
+
+    #try to draw something
+    textsystem.Print(screen, 'current tile index ' + str(curtilenum), 35*32, 20*32)
 
     #screen.blit(mouse_graphic, (mx, my))
     pygame.display.flip()
