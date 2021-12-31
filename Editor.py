@@ -14,13 +14,11 @@ from TileSystem import TileSystem
 pygame.init()
 clock = pygame.time.Clock()
 
-
-
 def DrawGrid():
     
     for i in range(0, 32):
         pygame.draw.line(screen, ([255, 0, 0]), (i *32, 0), (i*32, 768))
-    for j in range(0, 24):
+    for j in range(0, 32):
         pygame.draw.line(screen, ([255, 0, 0]), (0, j*32), (1024, j*32))
 
 
@@ -28,15 +26,15 @@ mouse_down_state = 0
 
 
 screen_width = 1440
-screen_height = 768
+screen_height = 1024
 screen_tiles_w = 32
-screen_tiles_h = 24
+screen_tiles_h = 32
 #set screen
-screen = pygame.display.set_mode([screen_width,screen_height])
+screen = pygame.display.set_mode([screen_width,screen_height], pygame.SCALED)
 
 size = width, height = (32, 32)
 s = pygame.Surface(size)
-clear_screen = pygame.Surface([1440, 768])
+clear_screen = pygame.Surface([1440, 1024])
 clear_screen.fill([0, 0, 0])
 
 mouse_graphic = pygame.image.load('Assets/Mouse.png').convert()
@@ -47,7 +45,7 @@ tilesystem = TileSystem()
 
 #off by one would be 32, 24 but it needs one extra for the 0'th slot. -.-
 tilesystem.make_tiles(33, 25, tilesystem.tiles_image)
-tilemap = TileMap(32, 32)
+tilemap = TileMap(33, 33)
 
 
 
@@ -80,7 +78,7 @@ while(running):
         target_y = math.floor(my / 32)
 
         if (target_x < 32):
-            if (target_y <24):
+            if (target_y <32):
                     #Another stupid catch because apparently out of range is somehow possible
                 if (curtilenum <= len(tilesystem.tiles)):
                     tilemap.changetileat(curtilenum, target_x, target_y)
@@ -99,20 +97,13 @@ while(running):
 
 
 
-        
-
-
-
-
-                
-
     screen.blit(clear_screen, [0,0])
 
 
     #print(len(tilesystem.tiles))
 
     for i in range(0, 32):
-        for j in range(0, 24):
+        for j in range(0, 32):
             l = 1
             if (tilemap.gettileat(i, j)) !=None:
                 l = tilemap.gettileat(i, j)
@@ -170,6 +161,14 @@ while(running):
 
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_down_state = 0
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                tilemap.save_map()
+            
+            if event.key == pygame.K_l:
+                tilemap.load_map()
+
 
                 
 
