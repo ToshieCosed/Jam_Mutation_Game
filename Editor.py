@@ -6,7 +6,6 @@ from Menus import Menus
 from TileMap import TileMap
 from DrawText import Text_Renderer
 import math
-
 import random
 
 from TileSystem import TileSystem
@@ -81,8 +80,9 @@ while(running):
             if (target_y <32):
                     #Another stupid catch because apparently out of range is somehow possible
                 if (curtilenum <= len(tilesystem.tiles)):
-                    if curtilenum !=50 & curtilenum != 49:
-                        tilemap.changetileat(curtilenum, target_x, target_y)
+                    if curtilenum !=50:
+                        if curtilenum != 49:
+                            tilemap.changetileat(curtilenum, target_x, target_y)
                     if curtilenum == 50:
                         tilemap.addenemyat('eye_enemy', target_x, target_y)
                     if curtilenum == 49:
@@ -110,17 +110,17 @@ while(running):
             if (tilemap.gettileat(i, j)) !=None:
                 l = tilemap.gettileat(i, j)
 
-            if l != 49 & l != 50:
-
-                tilesystem.drawtileat(screen, i, j, l)
+                if l != 49:
+                    if l != 50:
+                        tilesystem.drawtileat(screen, i, j, l)
 
     for enemy in tilemap.enemies:
         type_, targ_x, targ_y = enemy
-    
+        
         if type_ == 'eye_enemy':
-            tilesystem.draw_tilesetat(screen, 50, targ_x, targ_y)
-        if type == 'mover_enemy':
-            tilesystem.draw_tilesetat(screen, 49, targ_x, targ_y)
+            tilesystem.drawtileat(screen, targ_x, targ_y, 50)
+        if type_ == 'mover_enemy':
+            tilesystem.drawtileat(screen, targ_x, targ_y, 49)
 
     #draw tileset
     tilesystem.draw_tilesetat(screen, 1024, 0)

@@ -5,11 +5,11 @@ class TileMap():
         self.width_x = width_x
         self.width_y = width_y
         self.map = [[0 for x in range(self.width_x)] for y in range(self.width_y)]
-        self.enemies = ("blank", 0, 0)
+        self.enemies = [("blank", 0, 0)]
 
         for i in range(len(self.map)):
             for j in range(len(self.map[0])):
-                self.map[i][j] = 1
+                self.map[i][j] = 0
 
     def changetileat(self, tilenum, x, y):
         self.map[x][y] = tilenum
@@ -19,13 +19,17 @@ class TileMap():
 
     def save_map(self):
         file = open('Assets/Templates/dump.json', 'w+')
+        enemyfile = open('Assets/Templates/enemy.json', 'w+')
         data = self.map
-        data2 = self.enemies
         json.dump(data, file)
+        enemydata = self.enemies
+        json.dump(enemydata, enemyfile)
 
     def load_map(self):
         file = open('Assets/Templates/dump.json', 'r+')
+        enemyfile = open('Assets/Templates/enemy.json', 'r+')
         self.map = json.load(file)
+        self.enemies = json.load(enemyfile)
 
     def addenemyat(self, enemytype, x, y):
         self.enemies.append((enemytype, x, y))
